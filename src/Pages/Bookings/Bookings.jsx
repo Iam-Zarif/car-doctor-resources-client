@@ -2,12 +2,12 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Providers/Authprovider";
 import BookingRow from "./BookingRow";
-
-
+import { useNavigate } from "react-router-dom";
 
 const Bookings = () => {
+  const navigate = useNavigate()
   const { user } = useContext(AuthContext);
-  console.log(user)
+  console.log(user);
   const [bookings, setBookings] = useState([]);
   const handleDelete = (id) => {
     const proceed = confirm("are you sure you want to delete? ");
@@ -20,8 +20,8 @@ const Bookings = () => {
           console.log(data);
           if (data.deletedCount > 0) {
             alert("delete successful");
-            const remaining = bookings.filter(booking => booking._id !== id);
-            setBookings(remaining)
+            const remaining = bookings.filter((booking) => booking._id !== id);
+            setBookings(remaining);
           }
         });
     }
@@ -30,16 +30,27 @@ const Bookings = () => {
   useEffect(() => {
     if (user) {
       const url = `http://localhost:5000/bookings?email=${user?.email}`;
-      fetch(url)
+      fetch(url, {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("car-access-token")}`,
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
-          setBookings(data);
+          if (!data.error) {
+            setBookings(data);
+          }
+          else{
+            navigate('/')
+          }
+          
         })
         .catch((error) => {
           console.error("Error fetching bookings:", error);
         });
     }
-  }, [user]);
+  }, [user,navigate]);
 
   return (
     <div>
