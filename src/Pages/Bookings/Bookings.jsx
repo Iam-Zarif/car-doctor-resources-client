@@ -12,7 +12,7 @@ const Bookings = () => {
   const handleDelete = (id) => {
     const proceed = confirm("are you sure you want to delete? ");
     if (proceed) {
-      fetch(`http://localhost:5000/bookings/${id}`, {
+      fetch(`https://car-doctor-server-i-am-zarif.vercel.app/bookings/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
@@ -29,7 +29,7 @@ const Bookings = () => {
 
   useEffect(() => {
     if (user) {
-      const url = `http://localhost:5000/bookings?email=${user?.email}`;
+      const url = `https://car-doctor-server-i-am-zarif.vercel.app/bookings?email=${user?.email}`;
       fetch(url, {
         method: "GET",
         headers: {
